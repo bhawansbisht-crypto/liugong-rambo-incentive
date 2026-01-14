@@ -48,6 +48,7 @@
       <div class="result" id="grandResult" style="display:none;">
         <strong>Grand Total Incentive: ₹<span id="grandTotal">0</span></strong>
       </div>
+      <div class="result" id="totalMachines"></div>
     </div>
 
     <div class="footer">Offline | No Login | For Internal Use Only</div>
@@ -120,6 +121,8 @@ Object.keys(modelData).forEach(model => {
 
 function calculateAll() {
   let grandTotal = 0;
+  let totalMachines = 0;
+
 
   Object.keys(modelData).forEach(model => {
     const safeKey = model.replace(/[^a-zA-Z0-9]/g, '');
@@ -128,6 +131,8 @@ function calculateAll() {
     const incCell = document.getElementById(`inc_${safeKey}`);
 
     const qty = parseFloat(qtyInput.value) || 0;
+    totalMachines += qty;
+
 
     if (qty > 0) {
       // Calculate 80% of the TARGET THEY ENTERED
@@ -149,6 +154,8 @@ function calculateAll() {
 
   document.getElementById('grandTotal').textContent = grandTotal.toFixed(0);
   document.getElementById('grandResult').style.display = 'block';
+  document.getElementById('totalMachines').innerHTML = "<strong>Total Machines: " + totalMachines + "</strong>";
+
 }
 </script>
 </body>
