@@ -139,17 +139,20 @@ function calculateAll() {
       const eighty = Math.max(1, Math.round(qty * 0.8));
       eightyCell.textContent = eighty;
 
-      // Proportionate formula
+      // Proportionate per machine
       const cutoff = modelData[model].cutoff;
       const base = modelData[model].incentive;
 
-      let total = (base * (qty / cutoff)) * qty;
+      let perMachine = base * (qty / cutoff);
 
-      // 4x cap
-      const maxAllowed = base * 4;
-      if (total > maxAllowed) {
-        total = maxAllowed;
+      // 4x cap per machine
+      const perMachineCap = base * 4;
+      if (perMachine > perMachineCap) {
+        perMachine = perMachineCap;
       }
+
+      // Total incentive
+      let total = perMachine * qty;
 
       incCell.textContent = Math.round(total);
       grandTotal += total;
