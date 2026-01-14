@@ -5,7 +5,6 @@
   <title>Liugong – RAMBO Incentive Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="theme-color" content="#0b5ed7"/>
-  <link rel="manifest" href="/liugong-rambo-incentive/manifest.json">
 
   <style>
     body { font-family: Arial, sans-serif; margin:0; background:#f4f6f9; }
@@ -140,14 +139,13 @@ function calculateAll() {
       const eighty = Math.max(1, Math.round(qty * 0.8));
       eightyCell.textContent = eighty;
 
-      // Proportionate logic
+      // Proportionate formula
       const cutoff = modelData[model].cutoff;
       const base = modelData[model].incentive;
 
-      const proportionate = base * (qty / cutoff);
-      let total = proportionate * qty;
+      let total = (base * (qty / cutoff)) * qty;
 
-      // 4x CAP LOGIC
+      // 4x cap
       const maxAllowed = base * 4;
       if (total > maxAllowed) {
         total = maxAllowed;
