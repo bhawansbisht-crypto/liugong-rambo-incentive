@@ -1,117 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>LiuGong – RAMBO Incentive Calculator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b5ed7">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Liugong RAMBO Incentive Calculator</title>
+  <meta name="theme-color" content="#0b5ed7" />
   <link rel="manifest" href="/liugong-rambo-incentive/manifest.json">
 
   <style>
-    body { font-family: Arial, Helvetica, sans-serif; margin: 0; background: #f4f6f9; }
-    .header { background: #0b5ed7; color: #fff; padding: 12px; text-align: center; font-size: 18px; font-weight: bold; }
-    .container { padding: 12px; }
-    .card { background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
-    th { background: #0b5ed7; color: #fff; position: sticky; top: 0; }
-    input { width: 70px; padding: 4px; }
-    button { width: 100%; padding: 12px; margin-top: 10px; background: #0b5ed7; color: #fff; border: none; border-radius: 8px; font-size: 16px; }
-    .export { background: #198754; }
-    .result { margin-top: 12px; padding: 12px; background: #e9f1ff; border-radius: 8px; font-size: 16px; }
-    .footer { text-align: center; font-size: 12px; color: #666; margin-top: 12px; }
+    body { font-family: Arial, sans-serif; margin:0; background:#f4f6f9; }
+    .header { background:#0b5ed7; color:#fff; padding:10px; text-align:center; font-size:18px; font-weight:bold; }
+    .container { padding:10px; }
+    table { width:100%; border-collapse:collapse; background:#fff; }
+    th, td { border:1px solid #ddd; padding:6px; font-size:13px; text-align:left; }
+    th { background:#0b5ed7; color:#fff; position:sticky; top:0; }
+    input { width:80px; padding:4px; }
+    button { width:100%; padding:12px; margin-top:10px; font-size:16px; border:none; border-radius:6px; cursor:pointer; }
+    .calcBtn { background:#0b5ed7; color:#fff; }
+    .excelBtn { background:#198754; color:#fff; }
+    .result { background:#e9f1ff; padding:10px; margin-top:10px; border-radius:6px; font-size:16px; }
+    .footer { text-align:center; font-size:12px; color:#666; margin-top:10px; }
   </style>
 </head>
 
 <body>
 
-<div class="header">LiuGong – RAMBO Incentive Calculator</div>
+<div class="header">Liugong – RAMBO Incentive Calculator</div>
 
 <div class="container">
-  <div class="card">
-    <table>
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Target Taken</th>
-          <th>80% of Target</th>
-          <th>Incentive (₹)</th>
-        </tr>
-      </thead>
-      <tbody id="modelTable"></tbody>
-    </table>
 
-    <button onclick="calculateAll()">Calculate Incentive & 80% Target</button>
-    <button class="export" onclick="exportToExcel()">Export to Excel</button>
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th>Target Taken</th>
+      <th>80% of Target</th>
+      <th>Incentive (₹)</th>
+    </tr>
+  </thead>
+  <tbody id="modelTable"></tbody>
+</table>
 
-    <div class="result" id="grandResult" style="display:none;">
-      <strong>Grand Total Incentive: ₹ <span id="grandTotal">0</span></strong>
-    </div>
+<button class="calcBtn" onclick="calculateAll()">Calculate Incentive & 80% Target</button>
+<button class="excelBtn" onclick="exportToExcel()">Export to Excel</button>
 
-    <div class="result" id="totalMachines"></div>
+<div class="result" id="grandResult" style="display:none;">
+  <strong>Grand Total Incentive: ₹ <span id="grandTotal">0</span></strong>
+</div>
 
-  </div>
+<div class="result" id="totalMachines"></div>
 
-  <div class="footer">Offline | No Login | For Internal Use Only</div>
+<div class="footer">Offline | No Login | For Internal Use Only</div>
+
 </div>
 
 <script>
 const modelData = {
+"9030F MINI EXCAVATOR": {cutoff:3, incentive:3000},
+"9040F MINI EXCAVATOR": {cutoff:3, incentive:4000},
+"908E MINI EXCAVATOR": {cutoff:3, incentive:8000},
+"914E EXCAVATOR": {cutoff:4, incentive:10000},
+"915E EXCAVATOR": {cutoff:4, incentive:8000},
+"921i EXCAVATOR": {cutoff:6, incentive:10000},
+"922EXD EXCAVATOR": {cutoff:6, incentive:8000},
+"922EXDLC EXCAVATOR": {cutoff:6, incentive:8000},
+"922EXDLC_800MM FULL MACHINE EXCAVATOR": {cutoff:6, incentive:6000},
+"922EA ALFA EXCAVATOR": {cutoff:6, incentive:8000},
+"922EALC ALFA EXCAVATOR": {cutoff:4, incentive:8000},
+"922EαLC_Super Structure_Rig Attachment": {cutoff:2, incentive:10000},
+"923EXDLC EXCAVATOR": {cutoff:2, incentive:10000},
+"924EXDLC EXCAVATOR": {cutoff:2, incentive:12000},
+"924EXDLC MECH EXCAVATOR": {cutoff:3, incentive:12000},
+"922EXDLC_800mm_Super Structure ( LR)": {cutoff:12, incentive:10000},
+"925EXLR EXCAVATOR LONG REACH": {cutoff:4, incentive:10000},
+"926EXDLC_800mm_Super Structure EXCAVATOR LONG REACH": {cutoff:2, incentive:15000},
+"930EXLR EXCAVATOR LONG REACH": {cutoff:2, incentive:15000},
+"926EXDLC EXCAVATOR": {cutoff:1, incentive:15000},
+"935EXD EXCAVATOR": {cutoff:1, incentive:15000},
+"939EXD EXCAVATOR": {cutoff:1, incentive:15000},
 
-  // MINI & SMALL EXCAVATORS
-  "9030F MINI EXCAVATOR": { cutoff: 3, incentive: 5000 },
-  "9040F MINI EXCAVATOR": { cutoff: 3, incentive: 5000 },
-  "908E MINI EXCAVATOR": { cutoff: 3, incentive: 8000 },
+"CLG818 WHEEL LOADER": {cutoff:4, incentive:10000},
+"CLG836 WHEEL LOADER": {cutoff:4, incentive:10000},
+"CLG838T MAX WHEEL LOADER": {cutoff:4, incentive:8000},
+"CLG842T MAX WHEEL LOADER": {cutoff:3, incentive:12000},
+"CLG850T MAX. WHEEL LOADER": {cutoff:2, incentive:12000},
+"CLG856T MAX WHEEL LOADER": {cutoff:2, incentive:15000},
+"CLG870H WHEEL LOADER": {cutoff:1, incentive:15000},
+"CLG886H WHEEL LOADER": {cutoff:1, incentive:20000},
 
-  // 14–15T
-  "914E EXCAVATOR": { cutoff: 4, incentive: 10000 },
-  "915E EXCAVATOR": { cutoff: 4, incentive: 8000 },
+"4100D GRADER": {cutoff:2, incentive:10000},
+"4180D GRADER": {cutoff:2, incentive:10000},
 
-  // 20–22T
-  "921i EXCAVATOR": { cutoff: 6, incentive: 10000 },
-  "922EXD EXCAVATOR": { cutoff: 6, incentive: 8000 },
-  "922EXDLC EXCAVATOR": { cutoff: 6, incentive: 8000 },
-  "922EXDLC 800MM FULL MACHINE": { cutoff: 6, incentive: 6000 },
-  "922EA ALFA EXCAVATOR": { cutoff: 6, incentive: 8000 },
+"6029E BABY TANDEM ROLLER": {cutoff:2, incentive:6000},
+"6611E SOIL COMPACTOR": {cutoff:2, incentive:6000},
 
-  // 24–26T
-  "924E EXCAVATOR": { cutoff: 6, incentive: 10000 },
-  "926E EXCAVATOR": { cutoff: 6, incentive: 12000 },
+"820TE ELECTRIC 2 TON": {cutoff:4, incentive:20000},
+"838TE ELECTRIC 4 TON": {cutoff:4, incentive:20000},
+"856HE ELCTRIC 6 TON": {cutoff:2, incentive:20000},
 
-  // 30T+
-  "930E EXCAVATOR": { cutoff: 4, incentive: 15000 },
-  "939E HD EXCAVATOR": { cutoff: 4, incentive: 20000 },
-
-  // WHEEL LOADERS
-  "CLG818 WHEEL LOADER": { cutoff: 6, incentive: 8000 },
-  "CLG836 WHEEL LOADER": { cutoff: 5, incentive: 10000 },
-  "CLG838T WHEEL LOADER": { cutoff: 5, incentive: 12000 },
-  "CLG842T WHEEL LOADER": { cutoff: 4, incentive: 15000 },
-  "CLG856 WHEEL LOADER": { cutoff: 4, incentive: 18000 },
-
-  // ELECTRIC WHEEL LOADERS
-  "820TE ELECTRIC LOADER": { cutoff: 3, incentive: 25000 },
-  "838TE ELECTRIC LOADER": { cutoff: 3, incentive: 30000 },
-  "856HE ELECTRIC LOADER": { cutoff: 2, incentive: 40000 },
-
-  // COMPACTORS
-  "CLG610H COMPACTOR": { cutoff: 5, incentive: 6000 },
-  "CLG614H COMPACTOR": { cutoff: 4, incentive: 8000 },
-
-  // GRADERS
-  "CLG4180D GRADER": { cutoff: 3, incentive: 12000 },
-
-  // BULLDOZERS
-  "CLG4100D BULLDOZER": { cutoff: 3, incentive: 15000 }
-
+"906FE BATTERY EXCAVATOR 6 TON": {cutoff:1, incentive:15000},
+"908FE CABLE EXCAVATOR 8 TON": {cutoff:1, incentive:15000},
+"922FE CABEL": {cutoff:1, incentive:25000},
+"922FE CABEL + ENGINE ( DUAL POWER)": {cutoff:1, incentive:25000},
+"922FE BATTERY LFP": {cutoff:1, incentive:25000},
+"926FE CABEL": {cutoff:1, incentive:30000},
+"939FE CABEL": {cutoff:1, incentive:25000},
+"950FE CABEL": {cutoff:1, incentive:35000},
+"9650FE DUAL POWER": {cutoff:1, incentive:35000},
+"385BEV SKID LOADER BATTERY ELECTRIC": {cutoff:1, incentive:25000}
 };
 
 // Build table
-const tableBody = document.getElementById('modelTable');
+const tableBody = document.getElementById("modelTable");
 
 Object.keys(modelData).forEach(model => {
-  const safeKey = model.replace(/[^a-zA-Z0-9]/g, '');
-  const row = document.createElement('tr');
+  const safeKey = model.replace(/[^a-zA-Z0-9]/g,'');
+  const row = document.createElement("tr");
   row.innerHTML = `
     <td>${model}</td>
     <td><input type="number" min="0" id="qty_${safeKey}" /></td>
@@ -126,45 +130,45 @@ function calculateAll() {
   let totalMachines = 0;
 
   Object.keys(modelData).forEach(model => {
-    const safeKey = model.replace(/[^a-zA-Z0-9]/g, '');
-    const qtyInput = document.getElementById(`qty_${safeKey}`);
+    const safeKey = model.replace(/[^a-zA-Z0-9]/g,'');
+    const qty = parseFloat(document.getElementById(`qty_${safeKey}`).value) || 0;
+
     const eightyCell = document.getElementById(`eighty_${safeKey}`);
     const incCell = document.getElementById(`inc_${safeKey}`);
 
-    const qty = parseFloat(qtyInput.value) || 0;
     totalMachines += qty;
 
-    if (qty > 0) {
-      const eightyPercent = Math.round(qty * 0.8) < 1 ? 1 : Math.round(qty * 0.8);
-      eightyCell.textContent = eightyPercent;
+    if(qty > 0){
+      const eighty = Math.max(1, Math.round(qty * 0.8));
+      eightyCell.textContent = eighty;
 
       const cutoff = modelData[model].cutoff;
       const base = modelData[model].incentive;
+
       const proportionate = base * (qty / cutoff);
       const total = proportionate * qty;
 
       incCell.textContent = total.toFixed(0);
       grandTotal += total;
     } else {
-      eightyCell.textContent = '0';
-      incCell.textContent = '0';
+      eightyCell.textContent = "0";
+      incCell.textContent = "0";
     }
   });
 
-  document.getElementById('grandTotal').textContent = grandTotal.toFixed(0);
-  document.getElementById('grandResult').style.display = 'block';
-  document.getElementById('totalMachines').innerHTML = "<strong>Total Machines: " + totalMachines + "</strong>";
+  document.getElementById("grandTotal").textContent = grandTotal.toFixed(0);
+  document.getElementById("grandResult").style.display = "block";
+  document.getElementById("totalMachines").innerHTML = `<strong>Total Machines: ${totalMachines}</strong>`;
 }
 
 function exportToExcel() {
-  let csv = "Model,Target Taken,80% Target,Incentive\n";
+  let csv = "Model,Target Taken,80% of Target,Incentive\n";
 
   Object.keys(modelData).forEach(model => {
-    const safeKey = model.replace(/[^a-zA-Z0-9]/g, '');
+    const safeKey = model.replace(/[^a-zA-Z0-9]/g,'');
     const qty = document.getElementById(`qty_${safeKey}`).value || 0;
     const eighty = document.getElementById(`eighty_${safeKey}`).textContent;
     const inc = document.getElementById(`inc_${safeKey}`).textContent;
-
     csv += `"${model}",${qty},${eighty},${inc}\n`;
   });
 
